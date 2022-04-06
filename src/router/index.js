@@ -1,11 +1,49 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
+import Entertainment from '../views/Entertainment.vue'
+import Sport from '../views/Sport.vue'
+import Technology from '../views/Technology.vue'
+import NewsDetail from '../views/NewsDetail.vue'
+import LiveAndSociey from '../views/Liveandsociety.vue'
+import NewsByCategory from '../views/NewsByCategory.vue'
 
 const routes = [
   {
     path: '/',
     name: 'home',
     component: HomeView
+  },
+  {
+    path: '/:id/Entertainment',
+    name: 'entertainment',
+    component: function(resolve, reject) {
+      loadComponent('NewsByCategory', 'NewsByCategory.js').then(resolve, reject);
+    },
+    props:true
+  },
+  {
+    path: '/:id/Sport',
+    name: 'sport',
+    component: NewsByCategory,
+    props:true
+  },
+  {
+    path: '/:id/Technology',
+    name: 'technology',
+    component: NewsByCategory,
+    props:true
+  },
+  {
+    path: '/:id/Live-and-society',
+    name: 'liveandsociety',
+    component: NewsByCategory,
+    props:true
+  },
+  {
+    path: '/news/:id',
+    name: 'news-detail',
+    component: NewsDetail,
+    props:true
   },
   {
     path: '/about',
