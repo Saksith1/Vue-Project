@@ -16,9 +16,7 @@ const routes = [
   {
     path: '/:id/Entertainment',
     name: 'entertainment',
-    component: function(resolve, reject) {
-      loadComponent('NewsByCategory', 'NewsByCategory.js').then(resolve, reject);
-    },
+    component: NewsByCategory,
     props:true
   },
   {

@@ -1,13 +1,14 @@
 <template>
+   <loading v-if="loading"/>
    <div class="bg">
-        <img src="/images/bg.jpg" alt="" class="bg-image">
+        <img :src="news.image" alt="" class="bg-image">
         <div class="container">
             <div class="row my-4">
                 <div class="col-md-9 content p-4">
                     <h1>{{ news.title }}</h1>
                     <p class="date">{{ news.created_at}}</p>
 
-                    <div class="description">{{ news.body }}</div>
+                    <div class="description" v-html="news.body "></div>
                 </div>
                 <div class="col-md-3">
                 
@@ -22,18 +23,25 @@
 import * as Vue from 'vue' // in Vue 3
 import axios from 'axios'
 import VueAxios from 'vue-axios'
+import Loading from './Animation/Loading.vue'
 
 export default ({
     props:['id'],
+    components:{
+        Loading
+    },
     data() {
         return{
-            news: []
+            news: [],
+            loading: true
         }
     },
     created() {
+        this.loading = true
         axios.get('http://127.0.0.1:8090/api/v1/posts/'+this.id)
         .then(response => {
             this.news = response.data['record']
+             this.loading = false
         })
         .catch(error => {
             console.log(error)

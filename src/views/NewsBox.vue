@@ -1,11 +1,12 @@
 <template>
     <router-link :to="{name:'news-detail', params:{id:news.id}}">
-    <div class="box-news" style=" background-image: url('/images/bg.jpg')">
+    <div class="box-news" :style="{ backgroundImage: `url(${news.image})` }">
         <div class="bg"></div>
         <div v-for="category in news.category" :key="category.id" class="category">{{ category.title }}</div>
             <div class="title">
                 <h3>{{ news.title }}</h3>
-                <p>{{ news.body }}</p>
+
+                <p v-html="$options.filters.truncate(news.body)"></p>
             </div>
         <div class="footer">{{ news.createdAt }}</div>
     </div>
@@ -15,7 +16,16 @@
 <script>
 
 export default ({
-    props:['news']
+    props:['news'],
+    filters: {
+        truncate: function (text, length) {
+        if (text.length > 30) {
+            return text.substring(0, 90) + '...'
+        } else {
+            return text
+        }
+        },
+    },
 })
 </script>
 

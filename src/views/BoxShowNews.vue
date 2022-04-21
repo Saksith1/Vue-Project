@@ -1,22 +1,29 @@
 <template>
-    <router-link :to="{name:'news-detail', params:{id:article.id}}">
-        <div class="box">
+    <router-link :to="{name:'news-detail', params:{id:article.id}}" class="link">
+        <div class="box py-2" :class="{'active':listView}">
             <div class="img-box">
                 <img :src="article.image" alt="">
             </div>
             <div class="content">
                 <h4>{{article.title}}</h4>
                 <span class="date">{{article.createdAt}}</span>
-                <p>
-                    {{article.body}}
-                </p>
+                <p  v-html="$options.filters.truncate(article.body)"></p>
             </div>
         </div>
     </router-link>
 </template>
 <script>
 export default ({
-   props:['article']
+   props:['article'],
+   filters: {
+        truncate: function (text, length) {
+        if (text.length > 30) {
+            return text.substring(0, 120) + '...'
+        } else {
+            return text
+        }
+        },
+    },
 })
 </script>
 
@@ -45,5 +52,23 @@ export default ({
         font-size: 13px;
         color: rgb(107, 107, 107);
         border-bottom:0.2px solid gray;
+    }
+    .link{
+        text-decoration: none;
+        color: black;
+    }
+    .column-view .box{
+        flex-direction: column;
+    }
+    .column-view .img-box{
+        min-width: auto;
+        min-height: auto;
+        overflow: hidden;
+    }
+    .column-view .date{
+        display: none;
+    }
+    .column-view .box .content p{
+        display: none;
     }
 </style>
