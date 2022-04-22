@@ -17,24 +17,6 @@
                      <BoxShowNews v-bind:article="article" :v-bind:listView="listView" :class="{'column-view':!listView}" />
                   </div>
                 </div>
-                <div class="row">
-                    <nav aria-label="Page navigation example">
-                      <ul class="pagination">
-                        <li class="page-item" v-for="page in links" :key="page.label"><a class="page-link" @click="paginateHanlder(page.label)">{{ page.label }}</a></li>
-                      </ul>
-                    </nav>
-                </div>
-                <!-- <div class="row">
-                  <pagination :data="laravelData">
-                    <Pagination :data="laravelData" @pagination-change-page="getResults" />
-                    <template #prev-nav>
-                            <span>&lt; Previous</span>
-                        </template>
-                        <template #next-nav>
-                            <span>Next &gt;</span>
-                        </template>
-                    </pagination>
-                </div> -->
             </div>
             <div class="col-md-3">
 
@@ -51,6 +33,7 @@ import NewsBox from './NewsBox.vue'
 import BoxShowNews from './BoxShowNews.vue'
 import Loading from './Animation/Loading.vue'
 import LaravelVuePagination from 'laravel-vue-pagination'
+
 export default ({
     components: {
     'Pagination': LaravelVuePagination,
@@ -65,6 +48,9 @@ export default ({
         links:[],
         listView: true,
         laravelData: {},
+        users: [],
+        page:1
+        
       }
     },
     mounted() {
@@ -79,7 +65,9 @@ export default ({
       this.loading = true
       axios.get('http://127.0.0.1:8090/api/v1/topic/'+id+'?page=1')
        .then(response => {
-           this.articles  = response.data['data']
+           this.articles=response.data['data']
+           this.page = 1
+           console.log(this.articles)
            this.category = response.data['data'][0]['category'][0]['title']
            this.laravelData = response.data
            this.loading = false
@@ -97,30 +85,62 @@ export default ({
       colViewHanlder() {
          this.listView = false
       },
-          paginateHanlder(page) {
+      paginateHanlder(page) {
             this.loading = true
             axios.get('http://127.0.0.1:8090/api/v1/topic/'+this.id+'?page='+page)
             .then(response => {
-                this.articles  = response.data['data']
                 this.loading = false
                 this.links = response.data['meta']['links']
+                var length = response.data['data'].length
+
+                for(let i=0; i<length; i++){
+                    this.articles.push(response.data['data'][i])
+                }
             })
             .catch(error => {
               console.log(error)
             })
+      },
+      getInitialUsers() {
+        axios.get(`https://randomuser.me/api/?results=5`).then((response) => {
+          this.users = response.data.results;
+          console.log(response.data.results)
+        });
+      },
+      getNextUser() {
+          window.onscroll  = () => {
+            // @var int totalPageHeight
+            var totalPageHeight = document.body.scrollHeight; 
+
+            // @var int scrollPoint
+            var scrollPoint = window.scrollY + window.innerHeight;
+
+            // check if we hit the bottom of the page
+            if(scrollPoint >= totalPageHeight)
+            {
+               if(this.links.length > this.page){
+                 this.paginateHanlder(this.page)
+                 this.page = this.page + 1
+               }
+            }
+        }
       }
     },
-    created(){
+    beforeMount() {
        this.loading = true
-       axios.get('http://127.0.0.1:8090/api/v1/topic/'+this.id)
+       axios.get('http://127.0.0.1:8090/api/v1/topic/'+this.id+'?page=0')
        .then(response => {
            this.articles  = response.data['data']
            this.loading = false
            this.links = response.data['meta']['links']
+           console.log(response.data['data'])
        })
        .catch(error => {
          console.log(error)
        })
+    },
+    mounted() {
+      this.getNextUser();
     }
 })
 </script>
@@ -156,4 +176,35 @@ export default ({
    .top-bar .btn-column.active{
      color: rgb(23, 165, 23);
    }
+
+   /* --------------------------- */
+  .user {
+    display: flex;
+    background: #ccc;
+    border-radius: 1em;
+    margin: 1em auto;
+  }
+
+  .user-avatar {
+    padding: 1em;
+  }
+
+  .user-avatar img {
+    display: block;
+    width: 100%;
+    min-width: 64px;
+    height: auto;
+    border-radius: 50%;
+  }
+
+  .user-details {
+    padding: 1em;
+  }
+
+  .user-name {
+    margin: 0;
+    padding: 0;
+    font-size: 2rem;
+    font-weight: 900;
+  }
 </style>
