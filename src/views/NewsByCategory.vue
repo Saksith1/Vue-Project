@@ -101,12 +101,12 @@ export default ({
               console.log(error)
             })
       },
-      getInitialUsers() {
-        axios.get(`https://randomuser.me/api/?results=5`).then((response) => {
-          this.users = response.data.results;
-          console.log(response.data.results)
-        });
-      },
+      // getInitialUsers() {
+      //   axios.get(`https://randomuser.me/api/?results=5`).then((response) => {
+      //     this.users = response.data.results;
+      //     console.log(response.data.results)
+      //   });
+      // },
       getNextUser() {
           window.onscroll  = () => {
             // @var int totalPageHeight

@@ -1,5 +1,5 @@
 <template>
-    <div class="loading">
+    <div class="loading-box">
         <div class="icon">
             <div class="lds-spinner"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>
         </div>
@@ -7,21 +7,17 @@
 </template>
 
 <style scoped>
-.loading{
-    position: fixed;
-    top:0;
-    left: 0;
+.loading-box{
+    position: absolute;
     width: 100%;
     height: 100%;
-    /* background-color: rgba(0, 0, 0, 0.2); */
-    background-color: transparent;
-    z-index: 100;
+    z-index: 2;
 }
-.loading .icon{
+.loading-box .icon{
     position: absolute;
     top: 50%;
     left: 50%;
-    transform: translate(-50%,-50%);
+    transform: translate(-50%, -50%);
 }
 .lds-spinner {
   color: official;
@@ -43,7 +39,7 @@
   width: 6px;
   height: 18px;
   border-radius: 20%;
-  background: black;
+  background: white;
 }
 .lds-spinner div:nth-child(1) {
   transform: rotate(0deg);
@@ -101,5 +97,4 @@
     opacity: 0;
   }
 }
- 
 </style>

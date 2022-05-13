@@ -38,7 +38,7 @@ const routes = [
     props:true
   },
   {
-    path: '/news/:id',
+    path: '/news/:id',  
     name: 'news-detail',
     component: NewsDetail,
     props:true
